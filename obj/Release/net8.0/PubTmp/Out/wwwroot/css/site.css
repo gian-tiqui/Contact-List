@@ -1,0 +1,72 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+    background: linear-gradient(to bottom, #071a2b 50%, #031525 50%);
+    background-repeat: no-repeat;
+}
+
+.bg-primary-color {
+    background-color: #071a2b;
+}
+
+.bg-secondary-color {
+    background-color: #031525;
+}
+
+.bg-lightblue {
+    background-color: #8ab4f8;
+}
+
+.text-lightblue {
+    color: #8ab4f8;
+}
+
+.text-lightblue-links .nav-link {
+    color: #8ab4f8;
+}
+
+.navbar-nav {
+    margin-left: auto;
+}
+
+.form-control:focus {
+    border-color: #ced4da;
+    box-shadow: none;
+}
+
+.btn:focus {
+    outline: none;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #007bff; 
+    color: white;
+}
+
+.form-control.bg-secondary-color {
+    background-color: #031525 !important;
+    color: #8ab4f8 !important;
+}
+
+.dropdown-menu a:hover {
+    color: #8ab4f8 !important;
+    background-color: #071a2b !important;
+}

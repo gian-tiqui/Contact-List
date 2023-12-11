@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Auth";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center align-items-center mt-xl-5">
+        <div class="col-md-4">
+            <div class="rounded p-4 shadow-sm mb-4 bg-primary-color text-lightblue">
+                <h2 class="text-center mb-4">Login</h2>
+                <div class="mb-1">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control bg-secondary-color text-lightblue" id="username" placeholder="Enter username" required />
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control bg-secondary-color text-lightblue" id="password" placeholder="Enter password" required />
+                </div>
+
+                <div class="text-center">
+                    <button class="btn btn-sm fw-bold bg-lightblue text-dark btn-block mb-1 col-12" id="loginbtn">Sign in</button>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <hr class="my-3" style="width: 40%; background-color: #ced4da;" />
+                        <div class="mx-2">or</div>
+                        <hr class="my-3" style="width: 40%; background-color: #ced4da;" />
+                    </div>
+                    <button class="btn btn-sm fw-bold btn-secondary btn-block col-12" id="sign_up">Sign up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

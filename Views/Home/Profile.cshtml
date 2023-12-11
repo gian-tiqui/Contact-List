@@ -1,0 +1,275 @@
+﻿@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="container mt-5">
+    <div class="border rounded p-4 mb-4 bg-primary-color text-lightblue">
+        <h2>User Profile</h2>
+        <form id="profileForm">
+            <dl class="row">
+                <dt class="col-md-2">First Name</dt>
+                <dd class="col-md-4">
+                    <input type="text" class="form-control bg-secondary-color text-lightblue" id="firstName" readonly>
+                </dd>
+                <dt class="col-md-2">Last Name</dt>
+                <dd class="col-md-4">
+                    <input type="text" class="form-control bg-secondary-color text-lightblue" id="editLastName" readonly>
+                </dd>
+                <dt class="col-md-2">Middle Name</dt>
+                <dd class="col-md-4">
+                    <input type="text" class="form-control bg-secondary-color text-lightblue" id="middleName" readonly>
+                </dd>
+                <dt class="col-md-2">Username</dt>
+                <dd class="col-md-4">
+                    <input type="text" class="form-control bg-secondary-color text-lightblue" id="username" readonly>
+                </dd>
+                <dt class="col-md-2">Email</dt>
+                <dd class="col-md-4">
+                    <input type="text" class="form-control bg-secondary-color text-lightblue" id="email" readonly>
+                </dd>
+                <dt class="col-md-2">Address</dt>
+                <dd class="col-md-4">
+                    <input type="text" class="form-control bg-secondary-color text-lightblue" id="editAddress" readonly>
+                </dd>
+                <dt class="col-md-2">Birth Date</dt>
+                <dd class="col-md-4">
+                    <input type="text" class="form-control bg-secondary-color text-lightblue" id="birthDate" readonly>
+                </dd>
+                <dt class="col-md-2">Civil Status</dt>
+                <dd class="col-md-4">
+                    <input type="text" class="form-control bg-secondary-color text-lightblue" id="editCivilStatus" readonly>
+                </dd>
+                <dt class="col-md-2">Phone Number</dt>
+                <dd class="col-md-4">
+                    <input type="text" class="form-control bg-secondary-color text-lightblue" id="phoneNumber" readonly>
+                </dd>
+                <dt class="col-md-2">Sex</dt>
+                <dd class="col-md-4">
+                    <input type="text" class="form-control bg-secondary-color text-lightblue" id="sex" readonly>
+                </dd>
+                <dt class="col-md-2">No. of Contacts</dt>
+                <dd class="col-md-4">
+                    <input type="text" class="form-control bg-secondary-color text-lightblue" id="contactsCount" readonly>
+                </dd>
+            </dl>
+            <button type="button" class="btn bg-lightblue text-dark" id="editProfileBtn">Edit Profile</button>
+            <button type="button" class="btn bg-lightblue text-dark" id="updateInfoBtn" style="display: none;">Update Information</button>
+        </form>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col border rounded p-4 bg-primary-color text-lightblue m-1 p-5">
+            <canvas id="civilStatusChart"></canvas>
+        </div>
+        <div class="col border rounded p-4 bg-primary-color text-lightblue m-1 p-5">
+            <canvas id="sexChart"></canvas>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col border rounded p-4 bg-primary-color text-lightblue m-1">
+            <canvas id="birthMonthChart"></canvas>
+        </div>
+        <div class="col border rounded p-4 bg-primary-color text-lightblue m-1">
+            <canvas id="birthYearChart"></canvas>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        console.log(user);
+        let count = 0;
+        const userContacts = [];
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            try {
+                const response = await fetch("http://www.contactlistdata.com/api/contacts.php");
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const xmlData = await response.text();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlData, "text/xml");
+                const contacts = xmlDoc.getElementsByTagName("contact");
+
+                for (let i = 0; i < contacts.length; i++) {
+                    const contact = contacts[i];
+                    const contactOf = contact.querySelector("contact_of").textContent;
+
+                    if (contactOf === user?.uid) {
+                        userContacts.push(contact);
+                        count++;
+                    }
+                }
+
+                document.getElementById("contactsCount").textContent = count;
+
+                createCivilStatusChart();
+                createSexChart();
+                createBirthMonthChart();
+                createBirthYearChart();
+
+                displayUserData();
+
+            } catch (error) {
+                console.error("Error fetching XML data:", error);
+            }
+        });
+
+        function createCivilStatusChart() {
+            const civilStatusData = countOccurrences("civil_status", userContacts);
+            createPieChart("civilStatusChart", "Civil Status Distribution", civilStatusData);
+        }
+
+        function createSexChart() {
+            const sexData = countOccurrences("sex", userContacts);
+            createPieChart("sexChart", "Sex Distribution", sexData);
+        }
+
+        function createBirthMonthChart() {
+            const birthMonthData = countOccurrences("birthmonth", userContacts);
+            createBarChart("birthMonthChart", "Birth Month Distribution", birthMonthData);
+        }
+
+        function createBirthYearChart() {
+            const birthYearData = countOccurrences("birthyear", userContacts);
+            createBarChart("birthYearChart", "Birth Year Distribution", birthYearData);
+        }
+
+        function countOccurrences(attribute, contacts) {
+            const counts = {};
+            for (const contact of contacts) {
+                const value = contact.querySelector(attribute).textContent;
+                counts[value] = (counts[value] || 0) + 1;
+            }
+            return counts;
+        }
+
+        function getRandomColorArray(count) {
+            const colors = [];
+            for (let i = 0; i < count; i++) {
+                const randomColor = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.7)`;
+                colors.push(randomColor);
+            }
+            return colors;
+        }
+
+        function createBarChart(chartId, chartLabel, data) {
+            const ctx = document.getElementById(chartId).getContext("2d");
+            const labels = Object.keys(data);
+            const values = Object.values(data);
+            const backgroundColors = getRandomColorArray(labels.length);
+
+            new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: chartLabel,
+                        data: values,
+                        backgroundColor: backgroundColors,
+                        borderColor: backgroundColors.map(color => color.replace("0.7", "1")),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function createPieChart(chartId, chartLabel, data) {
+            const ctx = document.getElementById(chartId).getContext("2d");
+            const labels = Object.keys(data);
+            const values = Object.values(data);
+            const backgroundColors = getRandomColorArray(labels.length);
+
+            new Chart(ctx, {
+                type: "pie",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: chartLabel,
+                        data: values,
+                        backgroundColor: backgroundColors,
+                        borderColor: backgroundColors.map(color => color.replace("0.7", "1")), 
+                        borderWidth: 1
+                    }]
+                }
+            });
+        }
+
+        function displayUserData() {
+            $("#firstName").val(user?.first_name ?? "");
+            $("#editLastName").val(user?.last_name ?? "");
+            $("#middleName").val(user?.middle_name ?? "");
+            $("#username").val(user?.username ?? "");
+            $("#email").val(user?.email ?? "");
+            $("#editAddress").val(user?.address ?? "");
+            $("#birthDate").val(`${user?.birth_month}/${user?.birth_day}/${user?.birth_year}` ?? "");
+            $("#editCivilStatus").val(user?.civil_status ?? "");
+            $("#phoneNumber").val(user?.phone_number ?? "");
+            $("#sex").val(user?.sex ?? "");
+            $("#contactsCount").val(userContacts.length);
+        }
+
+        $("#editProfileBtn").click(() => {
+            $("#editLastName").prop("readonly", false);
+            $("#editAddress").prop("readonly", false);
+            $("#editCivilStatus").prop("readonly", false);
+
+            $("#editProfileBtn").hide();
+            $("#updateInfoBtn").show();
+        });
+
+        $("#updateInfoBtn").click((event) => {
+            event.preventDefault();
+            const updatedLastName = $("#editLastName").val();
+            const updatedAddress = $("#editAddress").val();
+            const updatedCivilStatus = $("#editCivilStatus").val();
+
+            const updatedData = {
+                lastName: updatedLastName,
+                address: updatedAddress,
+                civilStatus: updatedCivilStatus,
+                userId: user.uid
+            };
+
+            if (window.confirm(`Are you sure you want to update your info?\n\nUpdated Last Name: ${updatedLastName}\nUpdated Address: ${updatedAddress}\nUpdated Civil Status: ${updatedCivilStatus}`)) {
+
+                $.ajax({
+                    method: "POST",
+                    url: "http://www.contactlistdata.com/api/edit_profile.php",
+                    data: updatedData,
+                    success: (response) => {
+                        alert("Your data was updated successfully!");
+                        window.location.href = "/Home/Profile";
+
+                        user.civil_status = updatedCivilStatus;
+                        user.address = updatedAddress;
+                        user.last_name = updatedLastName;
+
+                        localStorage.setItem("user", JSON.stringify(user));
+                    },
+                    error: () => {
+                        alert("There was an error in updating your data");
+                    }
+                });
+
+            } else {
+                return;
+            }
+
+            $("input[readonly]").prop("readonly", true);
+            $("#editProfileBtn").show();
+            $("#updateInfoBtn").hide();
+        });
+    </script>
+}

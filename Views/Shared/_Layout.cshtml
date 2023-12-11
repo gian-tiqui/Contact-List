@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ContactList</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ContactList.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header id="head">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary-color border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand text-light fw-bold" asp-area="" asp-controller="Home" asp-action="Index">Contact List</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav me-3">
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">HOME</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Contacts">CONTACTS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="login" class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Auth">LOGIN</a>
+                        </li>
+                    </ul>
+
+                    <div class="nav-item">
+                        <div class="dropdown">
+                            <a id="currentuser" class="btn btn-sm px-2 dropdown-toggle bg-lightblue text-dark fw-bold fs-6" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                none
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end bg-primary-color" aria-labelledby="navbarDropdown">
+                                <a id="profile" class="dropdown-item text-light" asp-area="" asp-controller="Home" asp-action="Profile">Profile</a>
+                                <a id="changePassword" class="dropdown-item text-light" asp-area="" asp-controller="Home" asp-action="ChangePassword">Change Password</a>
+                                <a id="logout" class="dropdown-item text-light" asp-area="" asp-controller="Home">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-white bg-primary-color">
+        <div class="container">
+            &copy; 2023 - ContactList - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

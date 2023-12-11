@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Contacts";
+}
+
+<style>
+
+    .container-fluid {
+        padding: 20px;
+    }
+
+    h1 {
+        color: #007bff;
+    }
+
+    #addContact {
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    #noUser {
+        text-align: center;
+        display: none;
+    }
+
+    #gotoLogin2 {
+        margin-top: 20px;
+    }
+</style>
+
+<div class="container">
+    <div id="contactsDiv" class="rounded p-4 shadow mb-4 bg-primary-color text-lightblue text-center mt-5">
+        <div class="row">
+            <div class="col-md-6 text-start">
+                <h1 class="text-lightblue">Your Contacts</h1>
+            </div>
+            <div class="col-md-6 text-end">
+                <button id="addContact" class="btn bg-lightblue fw-bold">Add Contact</button>
+            </div>
+        </div>
+        <table class="table table-bordered table-striped mt-4 text-lightblue">
+            <thead class="thead-dark">
+                <tr class="text-center">
+                    <th>Name</th>
+                    <th>Sex</th>
+                    <th>Date of Birth</th>
+                    <th>Civil Status</th>
+                    <th>Address</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="contactsTableBody"></tbody>
+        </table>
+    </div>
+
+
+
+    <div id="noUser" class="text-center mt-5">
+        <h2 class="text-lightblue mb-4">Welcome to Contact List</h2>
+        <p class="text-lightblue mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <p class ="text-lightblue mb-3">Looks like you have not logged in yet.</p>
+        <button id="gotoLogin2" class="btn btn-lg fw-bold bg-lightblue text-dark">Get Started</button>
+    </div>
+
+
+</div>

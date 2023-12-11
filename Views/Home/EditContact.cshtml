@@ -1,0 +1,92 @@
+﻿@{
+    ViewData["Title"] = "Edit Contact";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center align-items-center mt-xl-5">
+        <div class="col-md-4">
+            <div class="rounded p-4 shadow-sm mb-4 bg-primary-color text-lightblue">
+                <form>
+                    <h2 class="text-center mb-4">Edit Contact</h2>
+                    <div class="mb-3">
+                        <label for="lastNameC" class="form-label">Last Name</label>
+                        <input type="text" class="form-control bg-secondary-color text-lightblue" id="lastNameC">
+                    </div>
+                    <div class="mb-3">
+                        <label for="addressC" class="form-label">Address</label>
+                        <textarea class="form-control bg-secondary-color text-lightblue" id="addressC"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="civilStatusC" class="form-label">Civil Status</label>
+                        <select class="form-select bg-secondary-color text-lightblue" id="civilStatusC" required>
+                            <option value="" disabled selected>Select civil status</option>
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                            <option value="Divorced">Divorced</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phoneNumberC" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control bg-secondary-color text-lightblue" id="phoneNumberC">
+                    </div>
+                    <div class="mb-3">
+                        <label for="emailC" class="form-label">Email</label>
+                        <input type="email" class="form-control bg-secondary-color text-lightblue" id="emailC">
+                    </div>
+                    <button type="button" class="btn btn-primary btn-block" id="saveChanges">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const contactString = localStorage.getItem("contact");
+        const parser = new DOMParser();
+        const contactDoc = parser.parseFromString(contactString, "text/xml");
+
+        const contact = {
+            id: contactDoc.querySelector("contact").getAttribute("id"),
+            lastName: contactDoc.querySelector("last_name").textContent,
+            address: contactDoc.querySelector("address").textContent,
+            civilStatus: contactDoc.querySelector("civil_status").textContent,
+            phoneNumber: contactDoc.querySelector("phone_number").textContent,
+            email: contactDoc.querySelector("email").textContent
+        };
+
+        $(document).ready(function () {
+            $("#lastNameC").val(contact.lastName);
+            $("#addressC").val(contact.address);
+            $("#civilStatusC").val(contact.civilStatus);
+            $("#phoneNumberC").val(contact.phoneNumber);
+            $("#emailC").val(contact.email);
+
+            $("#saveChanges").on("click", function () {
+                const updatedContact = {
+                    id: contact.id,
+                    lastName: $("#lastNameC").val(),
+                    address: $("#addressC").val(),
+                    civilStatus: $("#civilStatusC").val(),
+                    phoneNumber: $("#phoneNumberC").val(),
+                    email: $("#emailC").val()
+                };
+
+                // Make an AJAX call to update_contact.php
+                $.ajax({
+                    type: "POST",
+                    url: "http://www.contactlistdata.com/api/update_contact.php",
+                    data: updatedContact,
+                    success: function (response) {
+                        alert("Contact Updated");
+
+                        window.location.href = "/Home/Contacts";
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
+}
